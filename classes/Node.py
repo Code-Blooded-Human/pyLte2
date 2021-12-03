@@ -16,7 +16,7 @@ class Node:
         self.pygame= pygame
         self.color= RED
         self.screen = screen;
-        
+        self.type=None
         self.transmissions = [];
 
     def pos(self):
@@ -43,7 +43,14 @@ class Node:
     
     
     def send(self,msg:Msg,draw=False):
-        msg.dst.receive(msg)
+
+        # Simulation : The msg must fail if signal is weaker than 0.2
+        if rsrq(msg.dst.pos(),msg.src.pos()) < 0.5 and ( (msg.src.type == "UE" or msg.dst.type=="UE") ):
+            print("Message sending failed")
+            msg.fail=True
+        else:
+            msg.dst.receive(msg)
+        
         if draw:
             self.transmissions.append(msg)
             t=threading.Thread(target=self.removeMsg, args=[msg])
@@ -54,7 +61,12 @@ class Node:
         #Display the node
         self.pygame.draw.rect(self.screen, self.color, self.shape)
         for t in self.transmissions:
-            drawTransmisssionLine(self.pygame,self.screen,BLUE,t.src.pos(),t.dst.pos(),t.type)
+            color = BLUE
+            label = t.type
+            if t.fail == True:
+                color = RED
+                label = t.type +" FAILED X"
+            drawTransmisssionLine(self.pygame,self.screen,color,t.src.pos(),t.dst.pos(),label)
         
 
 

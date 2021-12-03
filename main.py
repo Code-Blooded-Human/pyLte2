@@ -1,3 +1,4 @@
+from classes.MME import MME
 from msg.RRCConnectionControlMsg import RRCConnectionControlMsg
 from utils.util import connectUEAndEND
 from classes.ENB import ENB
@@ -23,11 +24,16 @@ pygame.display.set_caption("LTE Handover Triggering Simulation")
 ue = UE(pygame,screen,100,100,"UE")
 enbs = [ENB(pygame,screen,150,150,"ENB0"),ENB(pygame,screen,250,150,"ENB1")]
 
+mme = MME(pygame,screen,250,250,"MME")
+
 for e in enbs:
     e.ue=ue
+    mme.addENB(e)
+    e.mme=mme
+
 
 connectUEAndEND(ue,enbs[0])
-nodes =[ue,*enbs]
+nodes =[ue,*enbs, mme]
 
 def background():
     time.sleep(5)

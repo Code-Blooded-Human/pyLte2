@@ -1,8 +1,5 @@
-
-from classes.ENB import ENB
-from classes.UE import UE
-
-
-def connectUEAndEND(ue:UE,enb:ENB):
+def connectUEAndEND(ue,enb):
+    if ue.connectedENB:
+        ue.connectedENB.connectedUE=None
     ue.connectedENB=enb
     enb.connectedUE=ue

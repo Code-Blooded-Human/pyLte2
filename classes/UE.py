@@ -12,6 +12,7 @@ class UE(Node):
         super(UE, self).__init__(*args)
         self.connectedENB=None
         self.handoverENB=None
+        self.type="UE"
 
 
     def checkA3(self,params):

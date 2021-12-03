@@ -7,12 +7,16 @@ from utils.colors import YELLOW
 from classes.Node import Node
 import time
 
+from utils.util import connectUEAndEND
+
 class ENB(Node):
     def __init__(self, *args):
         super(ENB, self).__init__(*args)
         self.ue=None
         self.connectedUE=None
         self.color=YELLOW
+        self.type="ENB"
+        self.mme = None
 
    
 
@@ -35,6 +39,10 @@ class ENB(Node):
 
         if msg.type == "RACHPreambleMsg":
             self.delayedSendCall(Msg("RACHPreambleACK",None,self,msg.src), True)
+
+        if msg.type == "RRCConfigurationComplete":
+            connectUEAndEND(msg.src, self)
+            self.delayedSendCall(Msg("PATHSwitchReq",None, self, self.mme), True)
             
     
     
